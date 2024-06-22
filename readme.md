@@ -30,21 +30,31 @@ __3. Test the route__
 python3 main.py
 ```
 - See a response similar to this
+
 ![](/img/client_resp_no_plugin.png)
 
 # Execution
 __1. Go to Kong Manager and enable the tcp-counter plugin__
-![](/img/enable_tcpcounter.png)
+
+![](/img/enable-tcpcounter.png)
 ![](/img/plugin-conf.png)
 
 # Measure
 __2. Go to client folder and run main.py again to test the functionality of the plugin__
 - The tcp-transform plugin will do 2 things:
+
   1. Transform the message and add the string "I am a test app" to send to upstream TCP server
-  2. log the output to stdout to show when
+
+  2. log the output to stdout to show when:
+
     a. A tcp request is read
+
     ![](/img/read_tcp.png)
+
     b. Send the response downstream
+
     ![](/img/get_resp_send_downstream.png)
+
     c. Client main.py gets response with modified payload
+
     ![](/img/client_resp.png)
