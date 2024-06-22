@@ -33,6 +33,14 @@ python3 main.py
 
 ![](/img/client_resp_no_plugin.png)
 
+__3. Take note env variables in docker-compose for use or reference throughout this project__
+- Kong setup on following ports:
+  a. Kong Manager: 2002
+  b. tcpserver: 65432
+  c. Kong TCP proxy: 9000
+  d. Kong Admin API: 2001
+  e. Kong HTTP proxy: 2000
+
 # Execution
 __1. Go to Kong Manager and enable the tcp-counter plugin__
 
