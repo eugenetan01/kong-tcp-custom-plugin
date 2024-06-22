@@ -6,12 +6,12 @@ __1. Run the docker-compose file__
   b. `docker system prune` -> delete cached containers
   c. `docker-compose up --build` -> rebuild containers
 
-__1. setup a service on Kong Manager__
+__2. setup a service on Kong Manager__
 - host: tcpserver
 - protocol: tcp
 - port: 65432
 
-__2. setup a route__
+__3. setup a route__
 ```
 curl -X POST http://localhost:2001/services/tcp-service/routes \
   --data "protocols[]=tcp" \
@@ -24,7 +24,7 @@ OR
 - follow the UI below to configure route
 ![](/img/ss_route.png)
 
-__3. Test the route__
+__4. Test the route__
 - Go to client folder and run main.py to fire a tcp request to tcpserver
 ```
 python3 main.py
@@ -33,7 +33,7 @@ python3 main.py
 
 ![](/img/client_resp_no_plugin.png)
 
-__3. Take note env variables in docker-compose for use or reference throughout this project__
+__5. Take note env variables in docker-compose for use or reference throughout this project__
 - Kong setup on following ports:
   a. Kong Manager: 2002
   b. tcpserver: 65432
