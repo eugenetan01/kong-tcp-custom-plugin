@@ -47,8 +47,8 @@ __1. Go to Kong Manager and enable the tcp-counter plugin__
 ![](/img/enable-tcpcounter.png)
 ![](/img/plugin-conf.png)
 
-# Measure
-__2. Go to client folder and run main.py again to test the functionality of the plugin__
+# Measurement
+__1. Go to client folder and run main.py again to test the functionality of the plugin__
 - The tcp-transform plugin will do 2 things:
 
   1. Transform the message and add the string "I am a test app" to send to upstream TCP server
