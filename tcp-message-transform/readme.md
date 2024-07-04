@@ -26,7 +26,7 @@ curl -X POST http://localhost:2001/services/tcp-service/routes \
 OR
 
 - follow the UI below to configure route
-  ![](tcp-message-transform/img/ss_route.png)
+  ![](/tcp-message-transform/img/ss_route.png)
 
 **4. Test the route**
 
@@ -38,7 +38,7 @@ python3 main.py
 
 - See a response similar to this
 
-![](tcp-message-transform/img/client_resp_no_plugin.png)
+![](/tcp-message-transform/img/client_resp_no_plugin.png)
 
 **5. Take note env variables in docker-compose for use or reference throughout this project**
 
@@ -53,8 +53,8 @@ python3 main.py
 
 **1. Go to Kong Manager and enable the tcp-counter plugin**
 
-![](tcp-message-transform/img/enable-tcpcounter.png)
-![](tcp-message-transform/img/plugin-conf.png)
+![](/tcp-message-transform/img/enable-tcpcounter.png)
+![](/tcp-message-transform/img/plugin-conf.png)
 
 # Measurement
 
@@ -68,12 +68,12 @@ python3 main.py
 
   a. A tcp request is read
 
-  ![](tcp-message-transform/img/read_tcp.png)
+  ![](/tcp-message-transform/img/read_tcp.png)
 
   b. Send the response downstream
 
-  ![](tcp-message-transform/img/get_resp_send_downstream.png)
+  ![](/tcp-message-transform/img/get_resp_send_downstream.png)
 
   c. Client main.py gets response with modified payload
 
-  ![](tcp-message-transform/img/client_resp.png)
+  ![](/tcp-message-transform/img/client_resp.png)
