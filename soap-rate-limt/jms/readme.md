@@ -1,19 +1,23 @@
 # Setup
 
-**1. Run docker ActiveMQ to start the JMS broker**
+**1. rename the lib/tibjms.jar to tibjms-1.0.jar**
 
-- `docker run --detach --name mycontainer -p 61616:61616 -p 8161:8161 --rm apache/activemq-artemis:latest-alpine`
-- If you want to enter into the broker container and interact with the shell use the following:
-  - `docker exec -it mycontainer /var/lib/artemis-instance/bin/artemis shell --user artemis --password artemis`
-- Link to setup this [here](https://activemq.apache.org/components/artemis/documentation/latest/docker.html)
+**2. import the tibjms-1.0.jar to this directory on your local maven repo**
 
-# Execute
+- if the below path doesn't exist, create it first
+- `/Users/<replace-user>/.m2/repository/com/tibco/tibjms/1.0`
 
-**1. Ensure login creds are as follow:**
+**3. import the jms-2.0.jar to this directory on your local maven repo**
 
-- Username: "artemis"
-- password: "artemis"
+- if the below path doesn't exist, create it first
+- `/Users/<replace-url>/.m2/repository/javax/jms/jms/2.0`
 
-**2. Command to start the java app**
+**4. run the pom.xml with below command**
+
+- `mvn clean install -U`
+
+# Execution
+
+**1. run the java app**
 
 - `mvn exec:java -Dexec.mainClass="com.example.App"`

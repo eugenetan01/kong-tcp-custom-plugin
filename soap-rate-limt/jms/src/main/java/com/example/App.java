@@ -1,5 +1,5 @@
 package com.example;
-import org.apache.activemq.ActiveMQConnectionFactory;
+import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 
 import com.example.App.HelloWorldConsumer;
 
@@ -64,13 +64,11 @@ public class App {
     public static class HelloWorldProducer implements Runnable {
         public void run() {
             try {
-                // Create a ConnectionFactory
-                ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:9000");
-                connectionFactory.setUserName("artemis");
-                connectionFactory.setPassword("artemis");
-
+                TibjmsQueueConnectionFactory connectionFactory = new TibjmsQueueConnectionFactory("tcp://localhost:9000");
+                // Create a connection
+                Connection connection = connectionFactory.createConnection("admin", "");
                 // Create a Connection
-                Connection connection = connectionFactory.createConnection();
+                //connectionFactory.createConnection();
                 connection.start();
 
                 // Create a Session
@@ -84,15 +82,20 @@ public class App {
                 producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
                 // Create a SOAP message
-                SOAPMessage soapMessage = createSOAPMessage();
+        /*         SOAPMessage soapMessage = createSOAPMessage();
 
                 // Convert SOAP message to String
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 soapMessage.writeTo(out);
                 String soapMessageString = new String(out.toByteArray());
+         */        
+                String requestID = "123";
+                String timestamp = "2024-07-05T10:15:30Z";
 
+                String soapMessage = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:ns=\"http://www.bidv.com.vn/entity/global/vn/account/acctdetail/fdrdetailinq/1.0\" xmlns:ns1=\"http://www.bidv.com/common/envelope/commonheader/1.0\" xmlns:ns2=\"http://www.bidv.com/global/common/account/1.0\">    <soap:Header/>    <soap:Body>       <ns:FDRDetailInqReq>          <ns1:Header>             <ns1:Common>                <ns1:BusinessDomain>CBS.TEST.BIDV.COM.VN</ns1:BusinessDomain>                <ns1:ServiceVersion>1.3</ns1:ServiceVersion>                <ns1:MessageId>"+requestID+"</ns1:MessageId>                <ns1:MessageTimestamp>"+timestamp+"</ns1:MessageTimestamp>             </ns1:Common>             <ns1:Client>                <ns1:SourceAppID>OMNI</ns1:SourceAppID>             </ns1:Client>          </ns1:Header>          <ns:BodyReqFDRDetailInquiry>             <ns:MoreRecordIndicator></ns:MoreRecordIndicator>             <ns:AccInfoType>                <ns2:AcctNo>2223619077</ns2:AcctNo>                 <ns2:AcctType>CD</ns2:AcctType>                 <ns2:CurCode>VND</ns2:CurCode>             </ns:AccInfoType>          </ns:BodyReqFDRDetailInquiry>       </ns:FDRDetailInqReq>    </soap:Body> </soap:Envelope>";  
+        
                 // Create a TextMessage with the SOAP message
-                TextMessage message = session.createTextMessage(soapMessageString);
+                TextMessage message = session.createTextMessage(soapMessage);
 
                 // Tell the producer to send the message
                 System.out.println("Sent message: " + message.hashCode() + " : " + Thread.currentThread().getName());
@@ -108,29 +111,7 @@ public class App {
             }
         }
 
-        private SOAPMessage createSOAPMessage() throws Exception {
-            MessageFactory messageFactory = MessageFactory.newInstance();
-            SOAPMessage soapMessage = messageFactory.createMessage();
-            SOAPPart soapPart = soapMessage.getSOAPPart();
-
-            // SOAP Envelope
-            SOAPEnvelope envelope = soapPart.getEnvelope();
-            envelope.addNamespaceDeclaration("example", "http://www.example.org");
-
-            // SOAP Body
-            SOAPBody soapBody = envelope.getBody();
-            soapBody.addChildElement("ExampleRequest", "example")
-                    .addChildElement("Message", "example")
-                    .addTextNode("Hello world! From: " + Thread.currentThread().getName() + " : " + this.hashCode());
-
-            soapMessage.saveChanges();
-
-            // Print the SOAP message
-            System.out.print("Request SOAP Message:");
-            soapMessage.writeTo(System.out);
-            System.out.println();
-            return soapMessage;
-        }
+        
     }
 
     public static class HelloWorldConsumer implements Runnable, ExceptionListener {
@@ -138,11 +119,11 @@ public class App {
             try {
 
                 // Create a ConnectionFactory
-                ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-                connectionFactory.setUserName("artemis");
-                connectionFactory.setPassword("artemis");
+                TibjmsQueueConnectionFactory connectionFactory = new TibjmsQueueConnectionFactory("tcp://1.55.137.70:7222");
+                // Create a connection
+                Connection connection = connectionFactory.createConnection("admin", "");
                 // Create a Connection
-                Connection connection = connectionFactory.createConnection();
+                //connectionFactory.createConnection();
                 connection.start();
 
                 connection.setExceptionListener(this);
@@ -162,7 +143,7 @@ public class App {
                 if (message instanceof TextMessage) {
                     TextMessage textMessage = (TextMessage) message;
                     String text = textMessage.getText();
-                    System.out.println("Received: " + text);
+                    System.out.println("Received message");
                 } else {
                     System.out.println("Received: " + message);
                 }

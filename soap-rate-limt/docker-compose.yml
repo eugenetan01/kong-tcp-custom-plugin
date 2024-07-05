@@ -3,16 +3,6 @@ volumes:
   kong_data:
     driver: local
 services:
-  activemq:
-    image: apache/activemq-artemis:latest-alpine
-    container_name: activemq
-    ports:
-      - "61616:61616"
-      - "8161:8161"
-    networks:
-      - kong-tcp
-    restart: on-failure
-
   postgres:
     image: postgres:13
     restart: always
@@ -110,7 +100,6 @@ services:
 
     volumes:
       # Adjust accordingly
-      - ../keyring:/srv/keyring
       - ./tcp-rate-limit:/opt/conf/
 networks:
   kong-tcp:
