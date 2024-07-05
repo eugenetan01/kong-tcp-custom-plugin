@@ -1,6 +1,6 @@
 # Setup
 
-**1. Run the docker-compose file**
+**1. run the docker-compose file**
 
 - `docker-compose up` -> to view the logs in stdout
 - To rebuild the images run
@@ -49,12 +49,15 @@ curl -X POST http://localhost:2001/services/mq/routes \
 
 - `mvn exec:java -Dexec.mainClass="com.example.App"`
 
-**2. observe responses, you should see messages hitting and being received from the MQ endpoint**
+**2. observe responses, you should see messages hitting and being received from the MQ endpoint in the same terminal you ran step 1**
 
 **3. go to kong manager and turn on the custom plugin**
 
 - search for tcp-rate-limit in plugins page
+- enable tcp-rate-limit globally or scope to the route**
 
-**4. enable tcp-rate-limit globally or scope to the route**
+**4. terminate the java app**
 
-**5. observe after 5 messages are received from the MQ, an error starts to appear and no more new messages are received from the MQ**
+**5. run the java app with the command in step 1 again**
+
+**6. observe after 5 messages are received from the MQ, an error starts to appear and no more new messages are received from the MQ**
