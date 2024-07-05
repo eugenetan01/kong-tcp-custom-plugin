@@ -56,7 +56,7 @@ curl -X POST http://localhost:2001/services/mq/routes \
 - search for tcp-rate-limit in plugins page
 - enable tcp-rate-limit globally or scope to the route**
 
-**4. terminate the java app**
+**4. terminate the java app in the terminal of step 1**
 
 **5. run the java app with the command in step 1 again**
 
