@@ -29,12 +29,29 @@ local schema = {
         { protocols = typedefs.protocols_stream },
         {
             config = {
+                -- The 'config' record is the custom part of the plugin schema
                 type = "record",
                 fields = {
-                }
+                    -- a standard defined field (typedef), with some customizations
+                    {
+                        host = {
+                            type = "string",
+                            default = "1.55.137.70",
+                            required = true,
+                        },
+                    },
+                    {
+                        port = {
+                            type = "string",
+                            default = "9225",
+                            required = true,
+                        },
+                    },
+                },
             }
-        },
+        }
     },
 }
 
 return schema
+

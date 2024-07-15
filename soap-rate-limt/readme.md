@@ -54,10 +54,22 @@ curl -X POST http://localhost:2001/services/mq/routes \
 **3. go to kong manager and turn on the custom plugin**
 
 - search for tcp-rate-limit in plugins page
-- enable tcp-rate-limit globally or scope to the route**
+- enable tcp-rate-limit globally or scope to the route\*\*
 
 **4. terminate the java app in the terminal of step 1**
 
 **5. run the java app with the command in step 1 again**
 
 **6. observe after 5 messages are received from the MQ, an error starts to appear and no more new messages are received from the MQ**
+
+** Note **
+
+- simple springboot to specify how many messages and return the count
+
+  - input:
+
+- size based rate limit? -> whats the size of the payload and u can tell typically how many messages
+  - based on count not reliable - what if someone dumps a huge message of 100mb?
+  - look at the size of the message instead - look at the request size > 100kb?
+  - based on size we can tell how many messages too - rate limit by size more accurate
+  - what if someone sends a huge msg with 100mb with attachment, is it wrong?

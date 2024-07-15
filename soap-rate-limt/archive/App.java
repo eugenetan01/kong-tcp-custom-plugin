@@ -22,41 +22,38 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import javax.jms.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 /**
  * Hello world!
  */
 public class App {
 
     public static void main(String[] args) throws Exception {
-        int numConsumers = 5; // Number of consumer threads
-        /*ExecutorService executorServiceProd = Executors.newFixedThreadPool(numConsumers); */
         HelloWorldProducer producer = new HelloWorldProducer();
-        /* for (int i = 0; i < numConsumers; i++) {
-            executorServiceProd.submit(new HelloWorldProducer());
-        } */
-        producer.run();
-        /* executorServiceProd.shutdown();
-        executorServiceProd.awaitTermination(1, TimeUnit.HOURS); */
+        /* String serverAddress = "1.55.137.70";
+        int port = 9225;
 
+        try (Socket socket = new Socket(serverAddress, port);
+             OutputStream outputStream = socket.getOutputStream()) {
+
+            String requestID = "123";
+            String timestamp = "2024-07-05T10:15:30Z";
+
+            String plainMessage = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:ns=\"http://www.bidv.com.vn/entity/global/vn/account/acctdetail/fdrdetailinq/1.0\" xmlns:ns1=\"http://www.bidv.com/common/envelope/commonheader/1.0\" xmlns:ns2=\"http://www.bidv.com/global/common/account/1.0\">    <soap:Header/>    <soap:Body>       <ns:FDRDetailInqReq>          <ns1:Header>             <ns1:Common>                <ns1:BusinessDomain>CBS.TEST.BIDV.COM.VN</ns1:BusinessDomain>                <ns1:ServiceVersion>1.3</ns1:ServiceVersion>                <ns1:MessageId>" + requestID + "</ns1:MessageId>                <ns1:MessageTimestamp>" + timestamp + "</ns1:MessageTimestamp>             </ns1:Common>             <ns1:Client>                <ns1:SourceAppID>OMNI</ns1:SourceAppID>             </ns1:Client>          </ns1:Header>          <ns:BodyReqFDRDetailInquiry>             <ns:MoreRecordIndicator></ns:MoreRecordIndicator>             <ns:AccInfoType>                <ns2:AcctNo>2223619077</ns2:AcctNo>                 <ns2:AcctType>CD</ns2:AcctType>                 <ns2:CurCode>VND</ns2:CurCode>             </ns:AccInfoType>          </ns:BodyReqFDRDetailInquiry>       </ns:FDRDetailInqReq>    </soap:Body> </soap:Envelope>";
+
+            for (int i = 0; i < 5; i++) {
+                outputStream.write(plainMessage.getBytes());
+                outputStream.flush();
+                System.out.println("Sent message: " + plainMessage);
+            }
+        } catch (Exception e) {
+            System.out.println("Caught: " + e);
+            e.printStackTrace();
+        }
+ */
         HelloWorldConsumer consumer = new HelloWorldConsumer();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(numConsumers);
-
-        for (int i = 0; i < numConsumers; i++) {
-            executorService.submit(new HelloWorldConsumer());
-        }
-
-        //producer.run();
-
-        executorService.shutdown();
-        executorService.awaitTermination(1, TimeUnit.HOURS);
-
-        //HelloWorldConsumer consumer = new HelloWorldConsumer();
-        
-        //consumer.run();
+        producer.run();
+        consumer.run();
 
     }
 
@@ -92,24 +89,24 @@ public class App {
                 String timestamp = "2024-07-05T10:15:30Z";
                 String plainMessage = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:ns=\"http://www.bidv.com.vn/entity/global/vn/account/acctdetail/fdrdetailinq/1.0\" xmlns:ns1=\"http://www.bidv.com/common/envelope/commonheader/1.0\" xmlns:ns2=\"http://www.bidv.com/global/common/account/1.0\"><soap:Header/><soap:Body><ns:FDRDetailInqReq><ns1:Header><ns1:Common><ns1:BusinessDomain>CBS.TEST.BIDV.COM.VN</ns1:BusinessDomain><ns1:ServiceVersion>1.3</ns1:ServiceVersion><ns1:MessageId>" + requestID + "</ns1:MessageId><ns1:MessageTimestamp>" + timestamp + "</ns1:MessageTimestamp></ns1:Common><ns1:Client><ns1:SourceAppID>OMNI</ns1:SourceAppID></ns1:Client></ns1:Header><ns:BodyReqFDRDetailInquiry><ns:MoreRecordIndicator></ns:MoreRecordIndicator><ns:AccInfoType><ns2:AcctNo>2223619077</ns2:AcctNo><ns2:AcctType>CD</ns2:AcctType><ns2:CurCode>VND</ns2:CurCode></ns:AccInfoType></ns:BodyReqFDRDetailInquiry></ns:FDRDetailInqReq></soap:Body></soap:Envelope>";
 
-                //byte[] messageBytes = plainMessage.getBytes("UTF-8");
+                byte[] messageBytes = plainMessage.getBytes("UTF-8");
                 //TextMessage message = session.createTextMessage(soapMessage);
 
                 // Tell the producer to send the message
                 //System.out.println("Sent message: " + message.hashCode() + " : " + Thread.currentThread().getName());
-                /* for (int i = 0; i < 5; i++){
+                for (int i = 0; i < 5; i++){
                     BytesMessage bytesMessage = session.createBytesMessage();
                     bytesMessage.writeBytes(messageBytes);
                     producer.send(bytesMessage);
                     System.out.println("Sent BytesMessage: " + plainMessage);
-                } */
+                }
                 // Clean up
 
-                TextMessage message = session.createTextMessage(plainMessage);
-                for (int i = 0; i < 10; i++){
+                /* TextMessage message = session.createTextMessage(plainMessage);
+                for (int i = 0; i < 5; i++){
                     producer.send(message);
                     System.out.println("Sent message: " + message.hashCode() + " : " + Thread.currentThread().getName());
-                }
+                } */
                 session.close();
                 connection.close();
             }
@@ -156,8 +153,6 @@ public class App {
                         System.out.println("Flushed: " + message);
                     }
                 } */
-
-                int counter = 0;
                 while (true) {
                     Message message = consumer.receive(5000);  // Wait up to 5 seconds for a message
                     if (message != null) {
@@ -179,12 +174,10 @@ public class App {
                         } else if (message instanceof TextMessage) {
                             TextMessage textMessage = (TextMessage) message;
                             System.out.println("Received TextMessage content: " + textMessage.getText());
-                            counter += 1;
                         } else {
                             System.out.println("Received non-bytes message: " + message);
                         }
                     } else {
-                        System.out.println("total num messages: " + counter);
                         System.out.println("No more messages.");
                         break;
                     }

@@ -6,44 +6,40 @@ local plugin = {
     VERSION = "0.1",
 }
 
-local global_counter = 0
-local last_period = nil
 
 function plugin:init_worker()
     kong.log.debug("saying hi from the 'init_worker' handler")
 end
 
-
 function plugin:preread(plugin_conf)
-    kong.log.debug("saying hi from the 'preread' handler")
-    local current_time = ngx.time()
-    local current_period = math.floor(current_time / 60) * 60  -- Current period (60-second window)
-
-    -- Retrieve the counter and timestamp from the shared dictionary
-    local counter, err = global_counter
-
-    -- Initialize counter and period if not present
-    if not counter or last_period ~= current_period then
-        global_counter = 0
-        last_period = current_period
-        counter = 0
+    kong.log.err("saying hi from preread")
+    
+    if not ngx.shared.kong:get("bytes_sent") then
+        ngx.shared.kong:set("bytes_sent", 0)
     end
 
-    -- Increment the counter
-    counter = counter + 1
-    global_counter = counter
-
-    -- Check the counter
-    if counter > 5 then
-        -- Rate limit exceeded
-        kong.log.err("ERROR: Exceeded rate limit. Exiting Process.")
+    kong.log.err(ngx.shared.kong:get("bytes_sent"))
+    max_size = 500
+    if ngx.shared.kong:get("bytes_sent") >= max_size then
+        kong.log.err("Rate Limit exceeded: ", ngx.shared.kong:get("bytes_sent"))
         return ngx.exit(429)
     end
 end
 
 
 function plugin:log(plugin_conf)
-    kong.log.debug("saying hi from the 'log' handler")
+    kong.log.err("saying hi from the 'log' handler")
+    local bytes_sent = ngx.var.bytes_sent
+    local bytes_received = ngx.var.bytes_received
+    local remote_addr = ngx.var.remote_addr
+
+    
+    local shared_dict = ngx.shared.kong
+    local current_size = shared_dict:get("bytes_sent") + bytes_sent
+    shared_dict:set("bytes_sent", current_size)
+
+    kong.log.err("log phase: ", shared_dict:get("bytes_sent"))
+    kong.log.err("TCP connection from ", remote_addr, " sent ", bytes_sent, " bytes and received ", bytes_received, " bytes")
 end
 
 return plugin

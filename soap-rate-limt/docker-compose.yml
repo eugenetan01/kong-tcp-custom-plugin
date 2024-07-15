@@ -10,7 +10,7 @@ services:
     networks:
       - kong-tcp
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD", "pg_isready", "-U", "kong"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -63,7 +63,7 @@ services:
 
       ## GENERAL
       KONG_AUDIT_LOG: on
-      KONG_LOG_LEVEL: debug
+      KONG_LOG_LEVEL: error
       KONG_PLUGINS: bundled,tcp-rate-limit
 
       ## NGINX
