@@ -33,7 +33,7 @@ local schema = {
                 type = "record",
                 fields = {
                     -- a standard defined field (typedef), with some customizations
-                    {
+                    --[[ {
                         host = {
                             type = "string",
                             default = "1.55.137.70",
@@ -46,7 +46,21 @@ local schema = {
                             default = "9225",
                             required = true,
                         },
+                    }, ]]
+                    {
+                         max_size = {
+                            type = "integer",
+                            default = 800,
+                            required = true,
+                        },
                     },
+                    {
+                        time_interval = {
+                           type = "integer",
+                           default = 60,
+                           required = true,
+                       },
+                   }
                 },
             }
         }
